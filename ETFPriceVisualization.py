@@ -24,10 +24,18 @@ class ETF:
         soup = BeautifulSoup(page.content, 'html.parser')
         Current = soup.find('span', attrs={"data-reactid":"32"})
         return Current.text
+    
     def createDates(self, filename, datetype , datecol):
         tempDates = np.genfromtxt(filename, skip_header = 1, delimiter = ',', usecols = datecol, dtype = datetype)
         self.Dates = [dt.datetime.strptime(d, '%Y-%m-%d').date() for d in tempDates]
-    #def holdingsdistributiongraph(self):                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+        
+    def annualandmonthlyreturn(self):
+        totalreturn = self.Prices[-1]/self.Prices[0]
+        
+        monthlyreturn = ((totalreturn -1)*100)/60
+        Annualreturn = ((totalreturn -1)*100)/5
+        return "Annual Return: " + str(round(Annualreturn, 3)) + "%\nMonthly Return: " + str(round(monthlyreturn, 3)) +"%"
+    
     def sharepricegraph(self, filename, datetype, pricetype, datecol, pricecol, ma):
         self.createDates(filename,  datetype, datecol)
         self.Prices = np.genfromtxt(filename, skip_header = 1, delimiter = ',', usecols = pricecol, dtype = pricetype)
@@ -39,10 +47,10 @@ class ETF:
         
         plt.xlabel('Date')
         plt.ylabel('Price(CAD)')
-        plt.title("VEE.TO, VIU.TO, XIC.TO, XUU.TO" +' (2017-2020)')
+        plt.title("VEE.TO, VIU.TO, XIC.TO, XUU.TO" +' (Jan 2016-Jan 2021)')
 
         plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval = 75))
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval = 115))
         plt.plot(self.Dates, self.Prices, label = self.ticker)
         
         plt.legend(bbox_to_anchor=(0.9, 0.33), loc='upper left', borderaxespad=0.)
@@ -52,6 +60,7 @@ class ETF:
         plot_widget.grid(row = 0, column = 1)
             
         plt.gcf().autofmt_xdate()
+        
     def VolvsOpenPrice(self, filename, datetype, openpricetype, voltype, datecol, openpricecol, volcol, multiplier, ma):
         self.createDates(filename, datetype, datecol)
         self.tradingvolume = np.genfromtxt(filename, skip_header = 1, delimiter = ',', usecols = volcol, dtype = voltype)
@@ -65,10 +74,10 @@ class ETF:
         
         plt.xlabel('Date')
         plt.ylabel('Trading Volume')
-        plt.title("Trading Volume (2017-2020)")
+        plt.title("Trading Volume (Jan 2016-Jan 2020)")
         
         plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval = 75))
+        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval = 115))
         plt.plot(self.Dates, self.tradingvolume, label = self.ticker + "*" + str(multiplier))
         
         plt.legend(bbox_to_anchor=(0.07, 0.9), loc='upper left', borderaxespad=0.)
