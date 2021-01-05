@@ -15,10 +15,11 @@ class ETF:
         self.ticker = ticker
         self.URL = URL
         self.Dates = []
-        self.Dates2 = []
+        #self.Dates2 = []
         self.Prices = []
         self.OpenPrices = []
         self.tradingvolume = []
+        self.sectors = []
     def getcurrentprice(self):
         page = requests.get(self.URL)
         soup = BeautifulSoup(page.content, 'html.parser')
@@ -87,3 +88,38 @@ class ETF:
         plot_widget.grid(row = 1, column = 1)
         
         plt.gcf().autofmt_xdate()
+    def holdingspiechart(self,  filename, sectortype,weighttype, sectorcol, weightcol, ma):
+        self.sectors = np.genfromtxt(filename, skip_header = 11, delimiter = ',', usecols = sectorcol, dtype = sectortype)
+        self.weights = np.genfromtxt(filename, skip_header = 11, delimiter = ',', usecols = weightcol, dtype = weighttype)
+        
+        holdings = list(set(self.sectors))
+        holdingnumbers = []
+        holdingweights = []
+        
+        for i in holdings:
+            count = 0
+            weight = 0
+            for j in range(len(self.sectors)):
+                if(i == self.sectors[j]):
+                    weight += self.weights[j]
+                    count += 1
+            holdingnumbers.append(count)
+            holdingweights.append(weight)
+        
+        fig = plt.figure(3)
+        plt.pie(holdingnumbers, labels = holdings, autopct = '%1.1f%%')
+        plt.axis('equal')
+        plt.title("XIC Sector Breakdown by Number of Holdings")
+        
+        fig2 = plt.figure(4)
+        plt.pie(holdingweights, labels = holdings, autopct = '%1.1f%%')
+        plt.axis('equal')
+        plt.title("XIC Sector Breakdown by Market Value")
+       
+        canvas = FigureCanvasTkAgg(fig,master = ma)
+        plot_widget = canvas.get_tk_widget()
+        plot_widget.grid(row = 0, column = 2)
+        
+        canvas2 = FigureCanvasTkAgg(fig2,master = ma)
+        plot_widget = canvas2.get_tk_widget()
+        plot_widget.grid(row = 1, column = 2)

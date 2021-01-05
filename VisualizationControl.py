@@ -26,6 +26,7 @@ VEETO.VolvsOpenPrice("VEE.TO.csv", str, float, int, 0, 1, 6, 10, m)
 VIUTO.VolvsOpenPrice("VIU.TO.csv", str, float, int, 0, 1, 6, 10, m)
 XICTO.VolvsOpenPrice("XIC.TO.csv", str, float, int, 0, 1, 6, 1, m)
 XUUTO.VolvsOpenPrice("XUU.TO.csv", str, float, int, 0, 1, 6, 10, m)
+
 Overview = "CURRENT PRICES (CAD)\n\n" + VEETO.ticker + " " + VEETO.getcurrentprice() +"\n" + VIUTO.ticker + " " + VIUTO.getcurrentprice()+ "\n" + XICTO.ticker + " " + XICTO.getcurrentprice()+ "\n" + XUUTO.ticker + " " + XUUTO.getcurrentprice()+"\n\nca.finance.yahoo.com\n" + str(datetime.now()) 
 Currentpricevar = Message(m, text = Overview)
 Currentpricevar.config(width = 145)
@@ -33,7 +34,8 @@ Currentpricevar.grid(row = 0, column = 0)
 
 Returns = "5 Year Returns\nWithout Distributions\n\n" + VEETO.ticker + "\n" + VEETO.annualandmonthlyreturn() +"\n\n" + VIUTO.ticker + "\n" + VIUTO.annualandmonthlyreturn()+ "\n\n" + XICTO.ticker + "\n" + XICTO.annualandmonthlyreturn()+ "\n\n" + XUUTO.ticker + "\n" + XUUTO.annualandmonthlyreturn()
 Returnsvar = Message(m, text = Returns)
-Returnsvar.config(width = 110)
+Returnsvar.config(width = 140)
 Returnsvar.grid(row = 1, column = 0)
 
+XICTO.holdingspiechart("XIC_holdings (1).csv", str, float, 0, 3, m)
 m.mainloop()
