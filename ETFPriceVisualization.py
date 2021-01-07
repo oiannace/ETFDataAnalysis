@@ -7,6 +7,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from datetime import datetime
 import datetime as dt
 import matplotlib.dates as mdates
+import statistics
 #import tkinter
 #from tkinter import *
 
@@ -15,7 +16,6 @@ class ETF:
         self.ticker = ticker
         self.URL = URL
         self.Dates = []
-        #self.Dates2 = []
         self.Prices = []
         self.OpenPrices = []
         self.tradingvolume = []
@@ -88,7 +88,8 @@ class ETF:
         plot_widget.grid(row = 1, column = 1)
         
         plt.gcf().autofmt_xdate()
-    def holdingspiechart(self,  filename, sectortype,weighttype, sectorcol, weightcol, ma):
+        
+    def holdingspiechart(self,  filename, sectortype, weighttype, sectorcol, weightcol, ma):
         self.sectors = np.genfromtxt(filename, skip_header = 11, delimiter = ',', usecols = sectorcol, dtype = sectortype)
         self.weights = np.genfromtxt(filename, skip_header = 11, delimiter = ',', usecols = weightcol, dtype = weighttype)
         
@@ -123,3 +124,19 @@ class ETF:
         canvas2 = FigureCanvasTkAgg(fig2,master = ma)
         plot_widget = canvas2.get_tk_widget()
         plot_widget.grid(row = 1, column = 2)
+    
+    def volatility(self, filename, col, dtype, header, ma, num):
+        volatility = statistics.stdev(self.Prices)
+        numofholdings = len(np.genfromtxt(filename, skip_header = header, delimiter = ',', usecols = col, dtype = dtype))
+        fig = plt.figure(5)
+        plt.bar(self.ticker, max(self.Prices) - min(self.Prices), width = 0.5, bottom = min(self.Prices))
+        plt.ylim(ymin = 0, ymax = 45)
+        plt.ylabel('Price Range (CAD)')
+        plt.title('Volatility of ETF Closing Price Over 5 Years using Standard Deviation')
+        
+        plt.annotate("SD = " + str(round(volatility, 4)), xy =( num, 10))
+        plt.annotate("Current\nHoldings: \n    " + str(numofholdings), xy = (num, 2))
+       
+        canvas = FigureCanvasTkAgg(fig, master = ma)
+        plot_widget = canvas.get_tk_widget()
+        plot_widget.grid(row = 0, column = 3)

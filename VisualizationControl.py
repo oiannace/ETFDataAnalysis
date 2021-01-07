@@ -9,8 +9,9 @@ from tkinter import *
 from datetime import datetime
 import datetime as dt
 import ETFPriceVisualization
+
 m = tkinter.Tk() 
-     
+m.title("ETF Overview and Data Visualization")     
 VEETO = ETFPriceVisualization.ETF("VEE.TO", 'https://ca.finance.yahoo.com/quote/VEE.TO/history?p=VEE.TO&.tsrc=fin-srch')
 VIUTO = ETFPriceVisualization.ETF("VIU.TO", "https://ca.finance.yahoo.com/quote/VIU.TO/")
 XICTO = ETFPriceVisualization.ETF("XIC.TO", "https://ca.finance.yahoo.com/quote/XIC.TO?p=XIC.TO&.tsrc=fin-srch")
@@ -37,5 +38,11 @@ Returnsvar = Message(m, text = Returns)
 Returnsvar.config(width = 140)
 Returnsvar.grid(row = 1, column = 0)
 
-XICTO.holdingspiechart("XIC_holdings (1).csv", str, float, 0, 3, m)
+XICTO.holdingspiechart("XIC_holdings(1).csv", str, float, 0, 3, m)
+
+XICTO.volatility("XIC_holdings(1).csv", 0, str, 11, m,-0.3)
+XUUTO.volatility("XUU_holdings.csv", 0, str, 29, m,0.7)
+VIUTO.volatility("VIU_holdings.csv", 0, str, 6, m,1.7)
+VEETO.volatility("VEE_holdings.csv", 0, str, 6, m,2.7)
+
 m.mainloop()
