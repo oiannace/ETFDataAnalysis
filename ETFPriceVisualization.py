@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import numpy as np
+import sklearn
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -13,6 +14,7 @@ import statistics
 
 class ETF:
     def __init__(self, ticker, URL):
+        
         self.ticker = ticker
         self.URL = URL
         self.Dates = []
@@ -21,10 +23,16 @@ class ETF:
         self.tradingvolume = []
         self.sectors = []
     def getcurrentprice(self):
-        page = requests.get(self.URL)
-        soup = BeautifulSoup(page.content, 'html.parser')
-        Current = soup.find('span', attrs={"data-reactid":"32"})
-        return Current.text
+        
+        source = requests.get(self.URL).text
+        
+        soup = BeautifulSoup(source, 'html.parser')
+
+        currentPrice = soup.find('fin-streamer')#, attrs = {"class": "Fw(b) Fz(36px) Mb(-4px) D(ib)"})
+
+        temp = currentPrice#print(self.ticker, currentPrice.text)
+        print(temp)
+        return currentPrice['value']
     
     def createDates(self, filename, datetype , datecol):
         tempDates = np.genfromtxt(filename, skip_header = 1, delimiter = ',', usecols = datecol, dtype = datetype)

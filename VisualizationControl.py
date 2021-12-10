@@ -12,7 +12,7 @@ import ETFPriceVisualization
 
 m = tkinter.Tk() 
 m.title("ETF Overview and Data Visualization")     
-VEETO = ETFPriceVisualization.ETF("VEE.TO", 'https://ca.finance.yahoo.com/quote/VEE.TO/history?p=VEE.TO&.tsrc=fin-srch')
+VEETO = ETFPriceVisualization.ETF("VEE.TO", 'https://ca.finance.yahoo.com/quote/VEE.TO/')
 VIUTO = ETFPriceVisualization.ETF("VIU.TO", "https://ca.finance.yahoo.com/quote/VIU.TO/")
 XICTO = ETFPriceVisualization.ETF("XIC.TO", "https://ca.finance.yahoo.com/quote/XIC.TO?p=XIC.TO&.tsrc=fin-srch")
 XUUTO = ETFPriceVisualization.ETF("XUU.T0", "https://ca.finance.yahoo.com/quote/XUU.TO?p=XUU.TO&.tsrc=fin-srch")
